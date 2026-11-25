@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>设备管理平台 · 演示</title>
+<meta name="description" content="设备管理平台演示：设备台账、维修工单、点检异常、预测性维护与 AI 知识问答" />
+<link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+<div class="shell">
+  <aside class="sidebar">
+    <div class="brand">
+      <span class="brand-mark">月</span>
+      <div>
+        <p class="brand-name">设备管理平台</p>
+        <p class="brand-sub">MAINTENANCE · DEMO</p>
+      </div>
+    </div>
+    <nav class="nav" id="nav">
+      <button class="nav-item active" data-view="dashboard"><span class="dot"></span>总览</button>
+      <button class="nav-item" data-view="work-orders"><span class="dot"></span>维修工单</button>
+      <button class="nav-item" data-view="abnormal"><span class="dot"></span>点检异常</button>
+      <button class="nav-item" data-view="pdm"><span class="dot"></span>预测性维护</button>
+      <button class="nav-item" data-view="kb"><span class="dot"></span>AI 知识问答</button>
+    </nav>
+    <div class="sidebar-foot">
+      <p class="label-mono">演示环境</p>
+      <p class="sidebar-note">数据为演示样例，不含真实业务信息；交互为前端模拟，不连接后端。</p>
+    </div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <div>
+        <p class="label-mono" id="page-eyebrow">2026年11月25日 · 星期二</p>
+        <h1 id="page-title">设备运行总览</h1>
+      </div>
+      <div class="topbar-right">
+        <span class="pill pill-demo">DEMO</span>
+        <span class="avatar">管</span>
+      </div>
+    </header>
+
+    <!-- 总览 -->
+    <section class="view active" id="view-dashboard">
+      <div class="stats">
+        <article class="card stat">
+          <div class="stat-head"><span>设备总数</span><i class="ico mint"></i></div>
+          <p class="stat-value">128</p>
+          <p class="stat-sub"><b class="text-mint">96 台</b> 运行中 · A 类关键 21 台</p>
+        </article>
+        <article class="card stat">
+          <div class="stat-head"><span>未关闭工单</span><i class="ico accent"></i></div>
+          <p class="stat-value">23</p>
+          <p class="stat-sub">5 张待派工 · 8 张处理中</p>
+        </article>
+        <article class="card stat">
+          <div class="stat-head"><span>逾期保养</span><i class="ico honey"></i></div>
+          <p class="stat-value">4</p>
+          <p class="stat-sub">今日到期 6 项</p>
+        </article>
+        <article class="card stat">
+          <div class="stat-head"><span>近 30 天报修</span><i class="ico neutral"></i></div>
+          <p class="stat-value">37</p>
+          <p class="stat-sub">含扫码与内部代报</p>
+        </article>
+      </div>
+
+      <section class="card">
+        <div class="card-head">
+          <h2>预警与待处理</h2>
+          <span class="label-mono">NEED ATTENTION</span>
+        </div>
+        <div class="alert-grid">
+          <button class="alert-tile" data-go="pdm">
+            <span class="tile-ico danger"></span>
+            <div>
+              <p class="tile-label">PDM 未关闭报警</p>
+              <p class="tile-value">3 <small>条</small></p>
+              <p class="tile-sub">严重 1 条 · 需人工确认</p>
+            </div>
+            <span class="arrow">↗</span>
+          </button>
+          <button class="alert-tile" data-go="pdm">
+            <span class="tile-ico accent"></span>
+            <div>
+              <p class="tile-label">待确认建议工单</p>
+              <p class="tile-value">2 <small>条</small></p>
+              <p class="tile-sub">由报警生成，确认后转正式工单</p>
+            </div>
+            <span class="arrow">↗</span>
+          </button>
+          <button class="alert-tile" data-go="abnormal">
+            <span class="tile-ico danger"></span>
+            <div>
+              <p class="tile-label">近 7 天点检异常</p>
+              <p class="tile-value">9 <small>项</small></p>
+              <p class="tile-sub">查看异常测点与处理记录</p>
+            </div>
+            <span class="arrow">↗</span>
+          </button>
+        </div>
+      </section>
+
+      <div class="grid-2">
+        <section class="card pad">
+          <div class="card-head">
+            <h2>设备状态</h2>
+            <span class="label-mono">ASSETS 128</span>
+          </div>
+          <div class="dist-bar">
+            <span style="width:75%;background:#4b7a53"></span>
+            <span style="width:9.4%;background:#bdb9af"></span>
+            <span style="width:3.9%;background:#d71018"></span>
+            <span style="width:4.7%;background:#2e5a7d"></span>
+            <span style="width:3.1%;background:#d9a441"></span>
+            <span style="width:2.3%;background:#77736a"></span>
+            <span style="width:1.6%;background:rgba(22,21,19,.4)"></span>
+          </div>
+          <div class="legend">
+            <span><i style="background:#4b7a53"></i>运行中 96</span>
+            <span><i style="background:#bdb9af"></i>待机 12</span>
+            <span><i style="background:#d71018"></i>故障 5</span>
+            <span><i style="background:#2e5a7d"></i>维修 6</span>
+            <span><i style="background:#d9a441"></i>保养 4</span>
+            <span><i style="background:#77736a"></i>停用 3</span>
+            <span><i style="background:rgba(22,21,19,.4)"></i>报废 2</span>
+          </div>
+          <div class="foot-row"><span>在册设备</span><b>128 台 · 覆盖 3 个车间</b></div>
+        </section>
+
+        <section class="card pad">
+          <div class="card-head">
+            <h2>工单进度</h2>
+            <span class="label-mono">OPEN 23</span>
+          </div>
+          <div class="bars">
+            <div class="bar-row"><span>待派工</span><div class="bar"><i style="width:22%;background:#2e5a7d"></i></div><em>5</em></div>
+            <div class="bar-row"><span>已派工</span><div class="bar"><i style="width:26%;background:#2e5a7d"></i></div><em>6</em></div>
+            <div class="bar-row"><span>处理中</span><div class="bar"><i style="width:35%;background:#2e5a7d"></i></div><em>8</em></div>
+            <div class="bar-row"><span>待验收</span><div class="bar"><i style="width:17%;background:#d9a441"></i></div><em>4</em></div>
+            <div class="bar-row"><span>已完成</span><div class="bar"><i style="width:12%;background:#4b7a53"></i></div><em>3</em></div>
+          </div>
+          <p class="hint">待派工 5 张，占未关闭工单 22%。</p>
+        </section>
+      </div>
+
+      <div class="grid-2 wide">
+        <section class="card">
+          <div class="card-head"><h2>最近工单</h2><span class="label-mono">LATEST</span></div>
+          <ul class="list">
+            <li><span class="mono">WO-2026-0187</span><p>注塑机 A 线合模异响</p><span class="badge danger">处理中</span><em>11-25 09:12</em></li>
+            <li><span class="mono">WO-2026-0186</span><p>空压机排气温度偏高</p><span class="badge accent">已派工</span><em>11-25 08:40</em></li>
+            <li><span class="mono">WO-2026-0185</span><p>冲床滑块润滑保养</p><span class="badge honey">待验收</span><em>11-24 16:05</em></li>
+            <li><span class="mono">WO-2026-0184</span><p>冷却塔风机振动异常</p><span class="badge accent">已派工</span><em>11-24 14:22</em></li>
+            <li><span class="mono">WO-2026-0183</span><p>包装线光电传感器失效</p><span class="badge mint">已完成</span><em>11-24 10:31</em></li>
+          </ul>
+        </section>
+        <section class="card">
+          <div class="card-head"><h2>待办保养</h2><span class="label-mono">TASKS</span></div>
+          <ul class="list">
+            <li><span class="mono">PM-0921</span><p>注塑机月度点检</p><span class="badge danger">已逾期</span><em>11-24</em></li>
+            <li><span class="mono">PM-0922</span><p>空压机 500h 保养</p><span class="badge honey">今日</span><em>11-25</em></li>
+            <li><span class="mono">PM-0923</span><p>冲床周检</p><span class="badge honey">今日</span><em>11-25</em></li>
+            <li><span class="mono">PM-0924</span><p>行车钢丝绳检查</p><span class="badge neutral">11-27</span><em>11-27</em></li>
+          </ul>
+        </section>
+      </div>
+    </section>
+
+    <!-- 工单 -->
+    <section class="view" id="view-work-orders">
+      <div class="filters">
+        <button class="chip active">全部 23</button>
+        <button class="chip">待派工 5</button>
+        <button class="chip">处理中 8</button>
+        <button class="chip">待验收 4</button>
+      </div>
+      <div class="grid-wo">
+        <section class="card">
+          <div class="card-head"><h2>工单列表</h2><span class="label-mono">WO-2026-0187 SELECTED</span></div>
+          <ul class="list wo-list">
+            <li class="selected"><span class="mono">WO-2026-0187</span><p>注塑机 A 线合模异响</p><span class="badge danger">处理中</span></li>
+            <li><span class="mono">WO-2026-0186</span><p>空压机排气温度偏高</p><span class="badge accent">已派工</span></li>
+            <li><span class="mono">WO-2026-0185</span><p>冲床滑块润滑保养</p><span class="badge honey">待验收</span></li>
+            <li><span class="mono">WO-2026-0184</span><p>冷却塔风机振动异常</p><span class="badge accent">已派工</span></li>
+            <li><span class="mono">WO-2026-0183</span><p>包装线光电传感器失效</p><span class="badge mint">已完成</span></li>
+          </ul>
+        </section>
+
+        <div class="wo-detail">
+          <section class="card pad">
+            <div class="wo-head">
+              <div>
+                <p class="label-mono">WO-2026-0187 · EQ-001</p>
+                <h2>注塑机 A 线合模异响</h2>
+                <p class="hint">注塑机 A 线 · 创建于 2026-11-25 09:12</p>
+              </div>
+              <span class="badge danger">处理中</span>
+            </div>
+            <div class="kv-grid">
+              <div><p class="k">故障现象</p><p class="v">合模时金属撞击声，低速段明显</p></div>
+              <div><p class="k">故障代码</p><p class="v">F-012 合模机构异响</p></div>
+              <div><p class="k">负责人</p><p class="v">张伟 · 维修工程师</p></div>
+              <div><p class="k">停机</p><p class="v">35 分钟</p></div>
+            </div>
+            <div class="note-box">
+              <p class="k">报修描述</p>
+              <p>操作工反馈合模到位前有明显金属撞击声，已停机待检。设备上一次润滑保养为 11-18。</p>
+            </div>
+          </section>
+
+          <section class="card ai">
+            <div class="ai-head">
+              <span class="spark">✦</span>
+              <div>
+                <h2>AI 故障问答</h2>
+                <p>deepseek-chat · 已带入本工单设备与故障现象，依据知识库原文作答</p>
+              </div>
+            </div>
+            <div class="ai-body">
+              <p class="ctx">上下文：注塑机 A 线（EQ-001）｜故障代码 F-012｜故障现象：合模时金属撞击声</p>
+              <div class="ask-row">
+                <input id="qa-input" value="合模异响先检查哪里" maxlength="200" />
+                <button id="qa-btn">提问</button>
+              </div>
+              <div class="chips" id="qa-suggest">
+                <button>需要拆检吗</button>
+                <button>铜套间隙标准是多少</button>
+                <button>怎么预防再次发生</button>
+              </div>
+              <div class="answer" id="qa-answer">
+                <p class="q">问：合模异响先检查哪里</p>
+                <p class="a">安全提示：进入设备运动区域前先执行上锁挂牌（断电、泄压、上锁、挂牌、验证零能量），不要只按急停。</p>
+                <p class="a">1. 先查哥林柱润滑：清洁表面后补注专用润滑脂。<br />2. 再测铜套间隙：塞尺测量，超厂家上限即更换铜套，不能只补脂不测间隙。<br />3. 低速空载合模 20 次，复测振动与异响。<br />4. 若仍异响，检查模板平行度与拉杆螺母松动。</p>
+                <div class="sources">
+                  <span class="src">1 注塑机合模异响与哥林柱铜套润滑检查</span>
+                  <span class="src">2 维修前上锁挂牌（LOTO）安全要求</span>
+                </div>
+                <p class="meta">deepseek-chat · 耗时 6.4s · 回答由模型基于知识库生成，请结合现场判断</p>
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+    </section>
+
+    <!-- 点检异常 -->
+    <section class="view" id="view-abnormal">
+      <div class="filters" id="abnormal-ranges">
+        <button class="chip" data-days="7">近 7 天</button>
+        <button class="chip active" data-days="30">近 30 天</button>
+        <button class="chip" data-days="90">近 90 天</button>
+        <span class="hint" style="margin-left:auto">按测点聚合，重复异常置顶</span>
+      </div>
+      <div class="stats">
+        <article class="card stat"><div class="stat-head"><span>异常项</span><i class="ico danger"></i></div><p class="stat-value" data-an="items">26</p><p class="stat-sub" data-an="items-sub">近 30 天累计</p></article>
+        <article class="card stat"><div class="stat-head"><span>涉及测点</span><i class="ico honey"></i></div><p class="stat-value" data-an="points">11</p><p class="stat-sub" data-an="points-sub">7 台设备</p></article>
+        <article class="card stat"><div class="stat-head"><span>反复异常测点</span><i class="ico accent"></i></div><p class="stat-value" data-an="repeat">4</p><p class="stat-sub">同一点位 ≥ 2 次</p></article>
+        <article class="card stat"><div class="stat-head"><span>已转工单</span><i class="ico mint"></i></div><p class="stat-value" data-an="converted">7</p><p class="stat-sub">异常已进入维修流程</p></article>
+      </div>
+
+      <section class="card">
+        <div class="card-head"><h2>反复异常测点</h2><span class="label-mono">REPEATED 4</span></div>
+        <ul class="list wide-list">
+          <li><span class="badge danger">5 次</span><p><b>注塑机 A 线 · 哥林柱润滑</b><em class="mono">EQ-001 · 注塑机日检路线 · 已转工单 2 次</em></p><div class="right"><b>缺脂</b><em>11-25 09:05</em></div></li>
+          <li><span class="badge danger">4 次</span><p><b>空压机 1# · 排气温度</b><em class="mono">EQ-011 · 空压机周检路线 · 已转工单 1 次</em></p><div class="right"><b>98.6 ℃</b><em>11-25 08:22</em></div></li>
+          <li><span class="badge danger">3 次</span><p><b>冲床 2# · 滑块油位</b><em class="mono">EQ-021 · 冲床日检路线</em></p><div class="right"><b>低于下限</b><em>11-24 15:41</em></div></li>
+          <li><span class="badge danger">2 次</span><p><b>冷却塔 · 风机振动</b><em class="mono">EQ-031 · 公用工程周检 · 已转工单 1 次</em></p><div class="right"><b>4.8 mm/s</b><em>11-24 10:18</em></div></li>
+        </ul>
+      </section>
+
+      <section class="card">
+        <div class="card-head"><h2>异常明细</h2><span class="label-mono">LATEST 26</span></div>
+        <ul class="list detail-list">
+          <li><span class="badge danger">异常</span><p><b>注塑机 A 线 · 哥林柱润滑</b><em>实测 <span class="mono">缺脂</span> · 标准 均匀油膜 · 注塑机日检路线 · 执行人 李强</em></p><em class="time">11-25 09:05</em></li>
+          <li><span class="badge danger">异常</span><p><b>空压机 1# · 排气温度</b><em>实测 <span class="mono">98.6 ℃</span> · 标准 ≤ 90 ℃ · 空压机周检路线 · 执行人 王敏</em></p><em class="time">11-25 08:22</em></li>
+          <li><span class="badge danger">异常</span><p><b>冲床 2# · 滑块油位</b><em>实测 <span class="mono">低于下限</span> · 标准 油标 1/2–2/3 · 冲床日检路线 · 执行人 赵磊</em></p><em class="time">11-24 15:41</em></li>
+          <li><span class="badge danger">异常</span><p><b>冷却塔 · 风机振动</b><em>实测 <span class="mono">4.8 mm/s</span> · 标准 ≤ 4.5 mm/s · 公用工程周检 · 执行人 张伟</em></p><em class="time">11-24 10:18</em></li>
+          <li><span class="badge danger">异常</span><p><b>包装线 · 光电传感器</b><em>实测 <span class="mono">无信号</span> · 标准 正常触发 · 包装线日检 · 执行人 陈晨</em></p><em class="time">11-23 17:02</em></li>
+        </ul>
+      </section>
+    </section>
+
+    <!-- PDM -->
+    <section class="view" id="view-pdm">
+      <section class="card health">
+        <div class="health-left">
+          <div class="health-score" id="health-score"><span>82</span><small>健康分</small></div>
+          <div>
+            <p class="health-title">设备健康评分 <b class="text-honey" id="health-label">· 需要关注</b></p>
+            <p class="hint" id="health-desc">近 24 小时内按报警等级扣分：预警 −10、严重 −25，满分 100。当前预警 1 次、严重 0 次。</p>
+          </div>
+        </div>
+        <div class="filters tight" id="pdm-ranges">
+          <button class="chip active" data-days="1">24 小时</button>
+          <button class="chip" data-days="7">7 天</button>
+          <button class="chip" data-days="30">30 天</button>
+        </div>
+      </section>
+
+      <div class="stats">
+        <article class="card stat"><div class="stat-head"><span>监测测点</span><i class="ico mint"></i></div><p class="stat-value">5</p><p class="stat-sub">共 6 个测点 · 7 条启用规则</p></article>
+        <article class="card stat"><div class="stat-head"><span>24h 读数</span><i class="ico accent"></i></div><p class="stat-value" id="reading-count">65</p><p class="stat-sub">按小时 / 按天聚合后入图</p></article>
+        <article class="card stat"><div class="stat-head"><span>待处理报警</span><i class="ico danger"></i></div><p class="stat-value">3</p><p class="stat-sub">严重 1 条</p></article>
+        <article class="card stat"><div class="stat-head"><span>待确认建议</span><i class="ico honey"></i></div><p class="stat-value">2</p><p class="stat-sub">已转工单 1 条</p></article>
+      </div>
+
+      <section class="card pad">
+        <div class="card-head"><h2>测点趋势</h2><span class="label-mono" id="trend-label">LATEST 24H</span></div>
+        <div class="sensors" id="sensors"></div>
+      </section>
+
+      <section class="card">
+        <div class="card-head"><h2>未关闭报警</h2><span class="label-mono">OPEN 3</span></div>
+        <ul class="list">
+          <li><span class="badge danger">严重</span><p><b>空压机 1# · 排气温度 98.6 ℃</b><em>高温预警规则：持续 30 分钟超过 90 ℃ · 触发 4 次</em></p><em class="time">11-25 08:30</em></li>
+          <li><span class="badge honey">预警</span><p><b>冷却塔 · 风机振动 4.8 mm/s</b><em>振动阈值规则：超过 4.5 mm/s · 触发 2 次</em></p><em class="time">11-24 10:20</em></li>
+          <li><span class="badge honey">预警</span><p><b>注塑机 A 线 · 液压油温 52 ℃</b><em>油温斜率规则：24h 上升 6 ℃/天 · 触发 1 次</em></p><em class="time">11-23 16:44</em></li>
+        </ul>
+      </section>
+    </section>
+
+    <!-- 知识问答 -->
+    <section class="view" id="view-kb">
+      <div class="grid-kb">
+        <section class="card ai">
+          <div class="ai-head">
+            <span class="spark">✦</span>
+            <div>
+              <h2>AI 知识问答</h2>
+              <p>deepseek-chat · 先检索已发布知识，再依据原文作答并附来源</p>
+            </div>
+          </div>
+          <div class="ai-body">
+            <div class="ask-row">
+              <input id="kb-input" placeholder="描述设备、现象或报警代码，例如：注塑机液压油温过高怎么排查" maxlength="200" />
+              <button id="kb-btn">提问</button>
+            </div>
+            <div class="chips" id="kb-suggest">
+              <button>减速机漏油怎么处理</button>
+              <button>点检发现轴承温度偏高怎么办</button>
+              <button>哪些备件有可替代型号</button>
+            </div>
+            <div class="answer" id="kb-answer">
+              <p class="q">问：合模时异响先检查哪里</p>
+              <p class="a">安全提示：进入设备运动区域前先执行上锁挂牌，不要只按急停不隔离能源。</p>
+              <p class="a">1. 先查哥林柱润滑，清洁后补注专用润滑脂。<br />2. 用塞尺测铜套间隙，超过厂家上限即更换。<br />3. 低速空载合模 20 次，复测振动与异响。</p>
+              <div class="sources"><span class="src">1 注塑机合模异响与哥林柱铜套润滑检查</span><span class="src">2 维修前上锁挂牌（LOTO）安全要求</span></div>
+              <p class="meta">deepseek-chat · 耗时 5.9s · 回答由模型基于知识库生成，请结合现场判断</p>
+            </div>
+          </div>
+        </section>
+
+        <aside class="kb-side">
+          <section class="card pad">
+            <h2 class="side-title">知识分类</h2>
+            <ul class="cat-list">
+              <li><span>故障案例</span><em>12</em></li>
+              <li><span>维修方案</span><em>9</em></li>
+              <li><span>操作规程</span><em>7</em></li>
+              <li><span>安全提示</span><em>5</em></li>
+              <li><span>备件替代</span><em>4</em></li>
+            </ul>
+          </section>
+          <section class="card pad">
+            <h2 class="side-title">从工单沉淀</h2>
+            <p class="hint">工单关闭后可把现象、原因与对策一键沉淀为知识，下次同类故障直接复用。</p>
+            <ul class="list small">
+              <li><p><b>空压机高温处理经验</b><em>来源 WO-2026-0179 · 3 人觉得有用</em></p></li>
+              <li><p><b>冲床滑块润滑标准</b><em>来源 WO-2026-0162 · 5 人觉得有用</em></p></li>
+            </ul>
+          </section>
+        </aside>
+      </div>
+    </section>
+
+    <footer class="page-foot">
+      <span>设备管理平台 · 静态演示版</span>
+      <span>源码：github.com/chenyilei1996/cmms-lite</span>
+    </footer>
+  </main>
+</div>
+<script src="./app.js"></script>
+</body>
+</html>
