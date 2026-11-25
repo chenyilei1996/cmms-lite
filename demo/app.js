@@ -1,7 +1,12 @@
 const VIEW_META = {
   dashboard: { title: "设备运行总览", eyebrow: "2026年11月25日 · 星期二" },
+  notifications: { title: "通知与权限", eyebrow: "NOTIFICATIONS · RBAC" },
+  assets: { title: "设备台账", eyebrow: "ASSETS · 128 REGISTERED" },
+  "spare-parts": { title: "备件库存", eyebrow: "SPARE PARTS · INVENTORY" },
   "work-orders": { title: "维修工单", eyebrow: "WORK ORDERS · 23 OPEN" },
+  maintenance: { title: "保养计划", eyebrow: "PREVENTIVE MAINTENANCE" },
   abnormal: { title: "点检异常记录", eyebrow: "INSPECTION · ABNORMAL LOG" },
+  faults: { title: "故障分析", eyebrow: "FAULT ANALYTICS" },
   pdm: { title: "预测性维护", eyebrow: "PREDICTIVE MAINTENANCE" },
   kb: { title: "AI 知识问答", eyebrow: "KNOWLEDGE BASE · AI Q&A" },
 };
@@ -231,3 +236,64 @@ wireAsk("kb-input", "kb-btn", "kb-suggest", "kb-answer", CANNED.kb);
 /* 初始渲染 */
 setAbnormal(30);
 setHealth(1);
+
+/* ---------- 设备台账 ---------- */
+const ASSETS = [
+  { id: "EQ-001", name: "注塑机 A 线", workshop: "注塑车间", area: "注塑一线", status: "运行中", tone: "mint", grade: "A 类", owner: "李强", since: "2021-06", lastCheck: "11-25 09:05", wo: 1, pdm: "液压油温 45 ℃", note: "合模异响工单处理中" },
+  { id: "EQ-011", name: "空压机 1#", workshop: "公用工程", area: "空压站", status: "故障", tone: "danger", grade: "A 类", owner: "王敏", since: "2019-03", lastCheck: "11-25 08:22", wo: 2, pdm: "排气温度 98.6 ℃", note: "PDM 严重报警，已生成建议工单" },
+  { id: "EQ-021", name: "冲床 2#", workshop: "冲压车间", area: "冲压二线", status: "运行中", tone: "mint", grade: "A 类", owner: "赵磊", since: "2020-09", lastCheck: "11-24 15:41", wo: 0, pdm: "滑块温度 41 ℃", note: "润滑保养已完成" },
+  { id: "EQ-031", name: "冷却塔", workshop: "公用工程", area: "循环水站", status: "保养中", tone: "honey", grade: "B 类", owner: "张伟", since: "2018-11", lastCheck: "11-24 10:18", wo: 1, pdm: "风机振动 4.8 mm/s", note: "月度保养完成，观察振动趋势" },
+  { id: "EQ-041", name: "包装线", workshop: "包装车间", area: "包装一线", status: "运行中", tone: "mint", grade: "B 类", owner: "陈晨", since: "2022-04", lastCheck: "11-23 17:02", wo: 0, pdm: "总电流 210 A", note: "光电传感器已更换" },
+  { id: "EQ-051", name: "行车 3#", workshop: "冲压车间", area: "模具区", status: "停用", tone: "neutral", grade: "C 类", owner: "赵磊", since: "2017-08", lastCheck: "11-20 08:00", wo: 0, pdm: "未接入测点", note: "钢丝绳检查逾期，暂停使用" },
+];
+
+function qrHtml(seed) {
+  let cells = "";
+  for (let i = 0; i < 49; i += 1) {
+    const on = (i * 7 + seed * 13 + (i % 3)) % 5 < 2;
+    cells += `<i class="${on ? "" : "blank"}"></i>`;
+  }
+  return `<div class="qr" aria-hidden="true">${cells}</div>`;
+}
+
+function renderAssets(selectedId) {
+  const current = ASSETS.find((asset) => asset.id === selectedId) ?? ASSETS[0];
+  document.getElementById("asset-list").innerHTML = ASSETS.map(
+    (asset) => `<li class="${asset.id === current.id ? "selected" : ""}" data-asset="${asset.id}">
+      <span class="mono">${asset.id}</span>
+      <p><b>${asset.name}</b><em>${asset.workshop} · ${asset.area} · ${asset.grade}</em></p>
+      <span class="badge ${asset.tone}">${asset.status}</span>
+    </li>`,
+  ).join("");
+
+  document.getElementById("asset-detail").innerHTML = `
+    <div class="asset-detail-head">
+      ${qrHtml(ASSETS.indexOf(current) + 1)}
+      <div>
+        <p class="label-mono">${current.id} · ${current.grade}</p>
+        <h2>${current.name}</h2>
+        <p class="hint">${current.workshop} · ${current.area} · 责任人 ${current.owner}</p>
+        <div style="margin-top:8px"><span class="badge ${current.tone}">${current.status}</span></div>
+      </div>
+    </div>
+    <div class="asset-kv">
+      <div><p class="k">设备编号</p><p class="v mono">${current.id}</p></div>
+      <div><p class="k">投产时间</p><p class="v">${current.since}</p></div>
+      <div><p class="k">安装位置</p><p class="v">${current.workshop} · ${current.area}</p></div>
+      <div><p class="k">未关闭工单</p><p class="v">${current.wo} 张</p></div>
+      <div><p class="k">最近点检</p><p class="v">${current.lastCheck}</p></div>
+      <div><p class="k">PDM 最新读数</p><p class="v">${current.pdm}</p></div>
+    </div>
+    <ul class="timeline">
+      <li><span>点检：日检完成</span><em>${current.lastCheck}</em></li>
+      <li><span>工单：${current.note}</span><em>11-24</em></li>
+      <li><span>保养：月度保养计划已排期</span><em>11-27</em></li>
+      <li><span>台账：责任人 ${current.owner} 完成年度盘点</span><em>11-12</em></li>
+    </ul>`;
+
+  document.querySelectorAll("#asset-list li").forEach((item) => {
+    item.addEventListener("click", () => renderAssets(item.dataset.asset));
+  });
+}
+
+renderAssets("EQ-001");

@@ -18,9 +18,18 @@
       </div>
     </div>
     <nav class="nav" id="nav">
+      <p class="nav-group">工作台</p>
       <button class="nav-item active" data-view="dashboard"><span class="dot"></span>总览</button>
+      <button class="nav-item" data-view="notifications"><span class="dot"></span>通知与权限</button>
+      <p class="nav-group">设备与物料</p>
+      <button class="nav-item" data-view="assets"><span class="dot"></span>设备台账</button>
+      <button class="nav-item" data-view="spare-parts"><span class="dot"></span>备件库存</button>
+      <p class="nav-group">现场作业</p>
       <button class="nav-item" data-view="work-orders"><span class="dot"></span>维修工单</button>
+      <button class="nav-item" data-view="maintenance"><span class="dot"></span>保养计划</button>
       <button class="nav-item" data-view="abnormal"><span class="dot"></span>点检异常</button>
+      <p class="nav-group">知识与洞察</p>
+      <button class="nav-item" data-view="faults"><span class="dot"></span>故障分析</button>
       <button class="nav-item" data-view="pdm"><span class="dot"></span>预测性维护</button>
       <button class="nav-item" data-view="kb"><span class="dot"></span>AI 知识问答</button>
     </nav>
@@ -374,6 +383,208 @@
           </section>
         </aside>
       </div>
+    </section>
+
+    <!-- 设备台账 -->
+    <section class="view" id="view-assets">
+      <div class="filters">
+        <button class="chip active">全部 128</button>
+        <button class="chip">运行中 96</button>
+        <button class="chip">故障 5</button>
+        <button class="chip">保养 4</button>
+        <span class="hint" style="margin-left:auto">一机一码 · 扫码即可报修 / 点检</span>
+      </div>
+      <div class="stats">
+        <article class="card stat"><div class="stat-head"><span>设备总数</span><i class="ico mint"></i></div><p class="stat-value">128</p><p class="stat-sub">覆盖 3 个车间</p></article>
+        <article class="card stat"><div class="stat-head"><span>A 类关键设备</span><i class="ico danger"></i></div><p class="stat-value">21</p><p class="stat-sub">重点巡检与备件保障</p></article>
+        <article class="card stat"><div class="stat-head"><span>本月新增</span><i class="ico accent"></i></div><p class="stat-value">3</p><p class="stat-sub">已完成建档</p></article>
+        <article class="card stat"><div class="stat-head"><span>停用 / 报废</span><i class="ico neutral"></i></div><p class="stat-value">5</p><p class="stat-sub">停用 3 · 报废 2</p></article>
+      </div>
+      <div class="grid-assets">
+        <section class="card">
+          <div class="card-head"><h2>设备列表</h2><span class="label-mono">128 ASSETS</span></div>
+          <ul class="list asset-list" id="asset-list"></ul>
+        </section>
+        <section class="card pad" id="asset-detail"></section>
+      </div>
+    </section>
+
+    <!-- 备件库存 -->
+    <section class="view" id="view-spare-parts">
+      <div class="stats">
+        <article class="card stat"><div class="stat-head"><span>备件种类</span><i class="ico accent"></i></div><p class="stat-value">86</p><p class="stat-sub">在用 79 · 停用 7</p></article>
+        <article class="card stat"><div class="stat-head"><span>低库存</span><i class="ico danger"></i></div><p class="stat-value">4</p><p class="stat-sub">低于安全库存</p></article>
+        <article class="card stat"><div class="stat-head"><span>本月出库</span><i class="ico honey"></i></div><p class="stat-value">132</p><p class="stat-sub">工单领用 118</p></article>
+        <article class="card stat"><div class="stat-head"><span>库存金额</span><i class="ico mint"></i></div><p class="stat-value">¥86,400</p><p class="stat-sub">较上月 −3.2%</p></article>
+      </div>
+
+      <a class="low-stock" href="#">
+        <span><b>4 种备件</b> 低于安全库存，建议补货：润滑油、铜套、空滤、光电传感器。</span>
+        <em>去补货 →</em>
+      </a>
+
+      <section class="card">
+        <div class="card-head"><h2>备件台账</h2><span class="label-mono">SPARE PARTS</span></div>
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead><tr><th>编码</th><th>名称</th><th>规格</th><th>库存 / 安全</th><th>库位</th><th>最近变动</th></tr></thead>
+            <tbody>
+              <tr><td class="mono">SP-0001</td><td>减速机润滑油</td><td>ISO VG220 / 18L</td><td><b class="text-danger">2 / 6</b></td><td>A-01</td><td>11-25 出库 4</td></tr>
+              <tr><td class="mono">SP-0002</td><td>哥林柱铜套</td><td>Ø80 × 90</td><td><b class="text-danger">1 / 4</b></td><td>A-03</td><td>11-25 出库 1</td></tr>
+              <tr><td class="mono">SP-0003</td><td>空压机空滤</td><td>SA-75 适配</td><td><b class="text-honey">3 / 6</b></td><td>B-02</td><td>11-24 出库 2</td></tr>
+              <tr><td class="mono">SP-0004</td><td>光电传感器</td><td>PNP 常开 M18</td><td><b class="text-honey">5 / 10</b></td><td>C-04</td><td>11-23 出库 3</td></tr>
+              <tr><td class="mono">SP-0005</td><td>三角皮带</td><td>B-1250</td><td><b>12 / 8</b></td><td>B-05</td><td>11-22 入库 10</td></tr>
+              <tr><td class="mono">SP-0006</td><td>接触器</td><td>CJX2-2510</td><td><b>9 / 4</b></td><td>C-01</td><td>11-21 出库 1</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="card-head"><h2>出入库流水</h2><span class="label-mono">LATEST 4</span></div>
+        <ul class="list detail-list">
+          <li><span class="badge danger">出库</span><p><b>减速机润滑油 × 4</b><em>工单 WO-2026-0187 · 注塑机 A 线 · 领用 张伟</em></p><em class="time">11-25 09:20</em></li>
+          <li><span class="badge danger">出库</span><p><b>哥林柱铜套 × 1</b><em>工单 WO-2026-0187 · 注塑机 A 线 · 领用 张伟</em></p><em class="time">11-25 09:18</em></li>
+          <li><span class="badge mint">入库</span><p><b>三角皮带 × 10</b><em>采购入库 · PO-2026-0456 · 供应商 华东传动</em></p><em class="time">11-22 14:06</em></li>
+          <li><span class="badge mint">入库</span><p><b>接触器 × 5</b><em>采购入库 · PO-2026-0451 · 供应商 正泰电气</em></p><em class="time">11-20 10:32</em></li>
+        </ul>
+      </section>
+    </section>
+
+    <!-- 保养计划 -->
+    <section class="view" id="view-maintenance">
+      <div class="stats">
+        <article class="card stat"><div class="stat-head"><span>本月计划</span><i class="ico accent"></i></div><p class="stat-value">46</p><p class="stat-sub">覆盖 32 台设备</p></article>
+        <article class="card stat"><div class="stat-head"><span>已完成</span><i class="ico mint"></i></div><p class="stat-value">38</p><p class="stat-sub">按期完成 36 · 补做 2</p></article>
+        <article class="card stat"><div class="stat-head"><span>逾期</span><i class="ico danger"></i></div><p class="stat-value">4</p><p class="stat-sub">最长逾期 3 天</p></article>
+        <article class="card stat"><div class="stat-head"><span>今日到期</span><i class="ico honey"></i></div><p class="stat-value">6</p><p class="stat-sub">已派工 4 项</p></article>
+      </div>
+
+      <section class="card">
+        <div class="card-head"><h2>保养计划</h2><span class="label-mono">PREVENTIVE</span></div>
+        <ul class="list wide-list">
+          <li><span class="badge danger">已逾期</span><p><b>注塑机 A 线 · 月度点检</b><em class="mono">EQ-001 · 每月 1 次 · 应完成 11-24 · 负责人 李强</em></p><div class="right"><b>逾期 1 天</b><em>PM-0921</em></div></li>
+          <li><span class="badge danger">已逾期</span><p><b>行车 3# · 钢丝绳检查</b><em class="mono">EQ-051 · 每两周 1 次 · 应完成 11-23 · 负责人 赵磊</em></p><div class="right"><b>逾期 2 天</b><em>PM-0918</em></div></li>
+          <li><span class="badge honey">今日到期</span><p><b>空压机 1# · 500h 保养</b><em class="mono">EQ-011 · 每 500 小时 · 负责人 王敏</em></p><div class="right"><b>待执行</b><em>PM-0922</em></div></li>
+          <li><span class="badge honey">今日到期</span><p><b>冲床 2# · 周检</b><em class="mono">EQ-021 · 每周 1 次 · 负责人 赵磊</em></p><div class="right"><b>已派工</b><em>PM-0923</em></div></li>
+          <li><span class="badge mint">已完成</span><p><b>冷却塔 · 月度保养</b><em class="mono">EQ-031 · 完成 11-24 10:18 · 执行人 张伟</em></p><div class="right"><b>用时 1.2h</b><em>PM-0915</em></div></li>
+          <li><span class="badge neutral">11-27</span><p><b>包装线 · 皮带张紧检查</b><em class="mono">EQ-041 · 每两周 1 次 · 负责人 陈晨</em></p><div class="right"><b>待提醒</b><em>PM-0924</em></div></li>
+        </ul>
+      </section>
+
+      <section class="card">
+        <div class="card-head"><h2>保养执行记录</h2><span class="label-mono">DONE 38</span></div>
+        <ul class="list detail-list">
+          <li><span class="badge mint">完成</span><p><b>冷却塔 · 月度保养</b><em>检查风机轴承、补脂、清理填料 · 执行人 张伟 · 用时 1.2h</em></p><em class="time">11-24 10:18</em></li>
+          <li><span class="badge mint">完成</span><p><b>空压机 2# · 周检</b><em>排放冷凝水、检查皮带 · 执行人 王敏 · 用时 0.4h</em></p><em class="time">11-23 15:40</em></li>
+          <li><span class="badge honey">补做</span><p><b>冲床 2# · 周检</b><em>逾期 1 天后补做 · 执行人 赵磊 · 备注：生产排期冲突</em></p><em class="time">11-22 08:55</em></li>
+        </ul>
+      </section>
+    </section>
+
+    <!-- 故障分析 -->
+    <section class="view" id="view-faults">
+      <div class="stats">
+        <article class="card stat"><div class="stat-head"><span>本月故障</span><i class="ico danger"></i></div><p class="stat-value">23</p><p class="stat-sub">较上月 −8%</p></article>
+        <article class="card stat"><div class="stat-head"><span>平均停机</span><i class="ico honey"></i></div><p class="stat-value">42<small style="font-size:12px"> 分钟</small></p><p class="stat-sub">单次故障平均</p></article>
+        <article class="card stat"><div class="stat-head"><span>MTTR</span><i class="ico accent"></i></div><p class="stat-value">1.8<small style="font-size:12px"> h</small></p><p class="stat-sub">平均修复时长</p></article>
+        <article class="card stat"><div class="stat-head"><span>设备故障率</span><i class="ico mint"></i></div><p class="stat-value">1.2<small style="font-size:12px">%</small></p><p class="stat-sub">按运行台时统计</p></article>
+      </div>
+
+      <div class="grid-2">
+        <section class="card pad">
+          <div class="card-head"><h2>近 6 个月故障次数</h2><span class="label-mono">TREND</span></div>
+          <div class="column-chart">
+            <div class="col"><i style="height:65%"></i><span>6月</span><em>15</em></div>
+            <div class="col"><i style="height:78%"></i><span>7月</span><em>18</em></div>
+            <div class="col"><i style="height:91%"></i><span>8月</span><em>21</em></div>
+            <div class="col"><i style="height:70%"></i><span>9月</span><em>16</em></div>
+            <div class="col"><i style="height:100%"></i><span>10月</span><em>25</em></div>
+            <div class="col"><i style="height:92%"></i><span>11月</span><em>23</em></div>
+          </div>
+          <p class="hint">10 月为故障高峰，主要由空压机高温与冷却塔振动叠加导致。</p>
+        </section>
+
+        <section class="card pad">
+          <div class="card-head"><h2>故障类型 Top 5</h2><span class="label-mono">BY COUNT</span></div>
+          <div class="bars">
+            <div class="bar-row"><span>机械异响</span><div class="bar"><i style="width:100%;background:#d71018"></i></div><em>8</em></div>
+            <div class="bar-row"><span>温度偏高</span><div class="bar"><i style="width:75%;background:#d9a441"></i></div><em>6</em></div>
+            <div class="bar-row"><span>电气故障</span><div class="bar"><i style="width:62.5%;background:#2e5a7d"></i></div><em>5</em></div>
+            <div class="bar-row"><span>漏油渗漏</span><div class="bar"><i style="width:37.5%;background:#2e5a7d"></i></div><em>3</em></div>
+            <div class="bar-row"><span>传感器失效</span><div class="bar"><i style="width:12.5%;background:#77736a"></i></div><em>1</em></div>
+          </div>
+          <p class="hint">机械异响集中在注塑机合模机构，建议纳入点检重点项。</p>
+        </section>
+      </div>
+
+      <section class="card">
+        <div class="card-head"><h2>停机时长 Top 设备</h2><span class="label-mono">DOWNTIME</span></div>
+        <ul class="list wide-list">
+          <li><span class="badge danger">6.5h</span><p><b>空压机 1#</b><em class="mono">EQ-011 · 3 次故障 · 排气温度偏高 2 次</em></p><div class="right"><b>A 类</b><em>公用工程</em></div></li>
+          <li><span class="badge honey">4.2h</span><p><b>注塑机 A 线</b><em class="mono">EQ-001 · 2 次故障 · 合模异响</em></p><div class="right"><b>A 类</b><em>注塑车间</em></div></li>
+          <li><span class="badge honey">2.8h</span><p><b>冷却塔</b><em class="mono">EQ-031 · 1 次故障 · 风机振动</em></p><div class="right"><b>B 类</b><em>公用工程</em></div></li>
+        </ul>
+      </section>
+    </section>
+
+    <!-- 通知与权限 -->
+    <section class="view" id="view-notifications">
+      <div class="grid-2">
+        <section class="card">
+          <div class="card-head"><h2>通知中心</h2><span class="label-mono">UNREAD 5</span></div>
+          <ul class="list notice-list">
+            <li class="unread"><span class="dot-red"></span><p><b>PDM 严重报警：空压机 1# 排气温度 98.6 ℃</b><em>超过阈值 90 ℃，持续 30 分钟 · 已生成建议工单</em></p><em class="time">08:30</em></li>
+            <li class="unread"><span class="dot-red"></span><p><b>点检异常：注塑机 A 线 哥林柱润滑缺脂</b><em>由 李强 在日检中提交，已自动创建工单 WO-2026-0187</em></p><em class="time">09:05</em></li>
+            <li class="unread"><span class="dot-red"></span><p><b>工单待验收：WO-2026-0185 冲床滑块润滑保养</b><em>维修已提交，等待 赵磊 验收</em></p><em class="time">昨天</em></li>
+            <li class="unread"><span class="dot-red"></span><p><b>备件低库存：哥林柱铜套仅剩 1 件</b><em>安全库存 4 件，建议尽快补货</em></p><em class="time">昨天</em></li>
+            <li class="unread"><span class="dot-red"></span><p><b>保养逾期：PM-0921 注塑机月度点检</b><em>已逾期 1 天，请安排执行</em></p><em class="time">昨天</em></li>
+            <li><p><b>工单已完成：WO-2026-0183 包装线光电传感器失效</b><em>由 陈晨 完成并验收</em></p><em class="time">11-24</em></li>
+          </ul>
+        </section>
+
+        <aside class="kb-side">
+          <section class="card pad">
+            <h2 class="side-title">后台入口</h2>
+            <p class="hint">配置类功能统一收在后台，前台只保留业务操作。</p>
+            <div class="chips" style="margin-top:10px">
+              <span class="chip">用户与角色</span>
+              <span class="chip">设备分类</span>
+              <span class="chip">知识库管理</span>
+              <span class="chip">AI 配置</span>
+              <span class="chip">报表与 KPI</span>
+            </div>
+          </section>
+          <section class="card pad">
+            <h2 class="side-title">角色能力</h2>
+            <p class="hint">角色可自定义，能力按三档组合。</p>
+            <ul class="cat-list">
+              <li><span>管理员</span><em>全部能力</em></li>
+              <li><span>维修工程师</span><em>作业 + 处置</em></li>
+              <li><span>查看者</span><em>只读</em></li>
+            </ul>
+          </section>
+        </aside>
+      </div>
+
+      <section class="card">
+        <div class="card-head"><h2>角色权限矩阵</h2><span class="label-mono">RBAC</span></div>
+        <div class="table-wrap">
+          <table class="data-table matrix">
+            <thead><tr><th>能力</th><th>管理员</th><th>维修工程师</th><th>查看者</th></tr></thead>
+            <tbody>
+              <tr><td>处理 / 派发工单</td><td class="yes">✓</td><td class="yes">✓</td><td class="no">—</td></tr>
+              <tr><td>执行点检与保养</td><td class="yes">✓</td><td class="yes">✓</td><td class="no">—</td></tr>
+              <tr><td>设备台账维护</td><td class="yes">✓</td><td class="no">—</td><td class="no">—</td></tr>
+              <tr><td>备件出入库</td><td class="yes">✓</td><td class="yes">✓</td><td class="no">—</td></tr>
+              <tr><td>知识发布与编辑</td><td class="yes">✓</td><td class="yes">✓</td><td class="no">—</td></tr>
+              <tr><td>用户与角色配置</td><td class="yes">✓</td><td class="no">—</td><td class="no">—</td></tr>
+              <tr><td>AI 模型配置</td><td class="yes">✓</td><td class="no">—</td><td class="no">—</td></tr>
+              <tr><td>报表导出</td><td class="yes">✓</td><td class="yes">✓</td><td class="no">—</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
     </section>
 
     <footer class="page-foot">

@@ -305,11 +305,86 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; background: 
 }
 
 /* responsive */
+/* 导航分组 */
+.nav-group {
+  margin: 10px 0 3px; padding-left: 12px;
+  font-size: 9px; letter-spacing: .14em; color: rgba(255,255,255,.3);
+}
+.nav-group:first-child { margin-top: 0; }
+
+.text-danger { color: var(--danger); }
+
+/* 设备台账 */
+.grid-assets { display: grid; grid-template-columns: 380px 1fr; gap: 16px; align-items: start; }
+.grid-assets > .card { margin-top: 16px; }
+.asset-list li { cursor: pointer; }
+.asset-list li:hover { background: rgba(245,244,240,.7); }
+.asset-list li.selected { background: rgba(232,238,241,.55); }
+.asset-list .badge { margin-left: auto; }
+.asset-detail-head { display: flex; align-items: flex-start; gap: 14px; }
+.qr {
+  width: 64px; height: 64px; flex: 0 0 64px; border-radius: 8px;
+  border: 1px solid var(--line); padding: 6px; background: #fff;
+  display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px;
+}
+.qr i { background: var(--ink); border-radius: .5px; }
+.qr i.blank { background: transparent; }
+.asset-detail-head h2 { margin-top: 3px; font-size: 16px; }
+.asset-detail-head .hint { margin-top: 3px; }
+.asset-kv { display: grid; grid-template-columns: 1fr 1fr; gap: 12px 18px; margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--line); }
+.asset-kv .k { font-size: 10px; color: var(--muted); }
+.asset-kv .v { margin-top: 3px; font-size: 12px; }
+.timeline { margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--line); }
+.timeline li { display: flex; gap: 10px; padding: 7px 0; font-size: 11.5px; }
+.timeline li::before { content: ""; width: 6px; height: 6px; margin-top: 6px; border-radius: 50%; background: var(--accent); flex: 0 0 6px; }
+.timeline li em { margin-left: auto; font-style: normal; font-family: var(--font-mono); font-size: 9.5px; color: var(--muted); white-space: nowrap; }
+
+/* 表格 */
+.table-wrap { overflow-x: auto; }
+.data-table { width: 100%; border-collapse: collapse; font-size: 11.5px; }
+.data-table th {
+  padding: 10px 20px; text-align: left; font-weight: 500; font-size: 10px;
+  color: var(--muted); border-bottom: 1px solid var(--line); white-space: nowrap;
+}
+.data-table td { padding: 11px 20px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+.data-table tbody tr:last-child td { border-bottom: 0; }
+.data-table tbody tr:hover { background: rgba(245,244,240,.6); }
+.data-table b { font-weight: 500; }
+.matrix td.yes { color: var(--mint); font-weight: 600; }
+.matrix td.no { color: #bdb9af; }
+
+/* 低库存提示 */
+.low-stock {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  margin-top: 16px; padding: 12px 18px; border-radius: 14px;
+  border: 1px solid rgba(168,74,12,.2); background: rgba(251,238,228,.5);
+  font-size: 11.5px; color: var(--ink-soft);
+}
+.low-stock b { color: var(--honey); }
+.low-stock em { font-style: normal; color: var(--muted); font-size: 10.5px; }
+
+/* 柱状图 */
+.column-chart { display: flex; align-items: flex-end; gap: 12px; height: 150px; margin-top: 16px; padding-top: 8px; }
+.column-chart .col { flex: 1; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; height: 100%; gap: 5px; }
+.column-chart i { width: 100%; max-width: 34px; border-radius: 6px 6px 2px 2px; background: linear-gradient(180deg, #4a7ea3, #2e5a7d); }
+.column-chart .col span { font-size: 9.5px; color: var(--muted); }
+.column-chart .col em { font-family: var(--font-mono); font-style: normal; font-size: 9.5px; color: var(--ink-soft); }
+
+/* 通知 */
+.notice-list li { align-items: flex-start; }
+.notice-list .dot-red { width: 6px; height: 6px; border-radius: 50%; background: var(--danger); margin-top: 6px; flex: 0 0 6px; }
+.notice-list li:not(.unread) { opacity: .62; }
+.notice-list li:not(.unread) .dot-red { background: transparent; }
+.notice-list p b { font-size: 12px; }
+.notice-list .time { margin-top: 1px; }
+
 @media (max-width: 1080px) {
+  .grid-assets { grid-template-columns: 1fr; }
   .grid-wo { grid-template-columns: 1fr; }
   .grid-kb { grid-template-columns: 1fr; }
   .sensors { grid-template-columns: repeat(2, 1fr); }
 }
+
 @media (max-width: 860px) {
   .shell { display: block; }
   .sidebar {
