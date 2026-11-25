@@ -14,7 +14,7 @@
       <span class="brand-mark">月</span>
       <div>
         <p class="brand-name">设备管理平台</p>
-        <p class="brand-sub">MAINTENANCE · DEMO</p>
+        <p class="brand-sub">设备管理 · 演示</p>
       </div>
     </div>
     <nav class="nav" id="nav">
@@ -37,7 +37,7 @@
     </nav>
     <div class="sidebar-foot">
       <p class="label-mono">演示环境</p>
-      <p class="sidebar-note">数据为演示样例，不含真实业务信息；交互为前端模拟，不连接后端。</p>
+      <p class="sidebar-note">数据来自本地库快照，只读展示，不连接后端。</p>
     </div>
   </aside>
 
@@ -48,7 +48,7 @@
         <h1 id="page-title">设备运行总览</h1>
       </div>
       <div class="topbar-right">
-        <span class="pill pill-demo">DEMO</span>
+        <span class="pill pill-demo">演示</span>
         <span class="avatar">管</span>
       </div>
     </header>
@@ -91,7 +91,7 @@
               <p class="tile-value" data-tile="alarms">3 <small>条</small></p>
               <p class="tile-sub" data-tile-sub="alarms">严重 1 条 · 需人工确认</p>
             </div>
-            <span class="arrow">↗</span>
+            <span class="arrow">›</span>
           </button>
           <button class="alert-tile" data-go="pdm">
             <span class="tile-ico accent"></span>
@@ -100,7 +100,7 @@
               <p class="tile-value" data-tile="suggestions">2 <small>条</small></p>
               <p class="tile-sub" data-tile-sub="suggestions">由报警生成，确认后转正式工单</p>
             </div>
-            <span class="arrow">↗</span>
+            <span class="arrow">›</span>
           </button>
           <button class="alert-tile" data-go="abnormal">
             <span class="tile-ico danger"></span>
@@ -109,7 +109,7 @@
               <p class="tile-value" data-tile="abnormal">9 <small>项</small></p>
               <p class="tile-sub" data-tile-sub="abnormal">查看异常测点与处理记录</p>
             </div>
-            <span class="arrow">↗</span>
+            <span class="arrow">›</span>
           </button>
         </div>
       </section>
@@ -218,7 +218,7 @@
 
           <section class="card ai">
             <div class="ai-head">
-              <span class="spark">✦</span>
+              <span class="spark">AI</span>
               <div>
                 <h2>AI 故障问答</h2>
                 <p>deepseek-chat · 已带入本工单设备与故障现象，依据知识库原文作答</p>
@@ -227,7 +227,7 @@
             <div class="ai-body">
               <p class="ctx" id="wo-ai-ctx">上下文：注塑机 A 线（EQ-001）｜故障代码 F-012｜故障现象：合模时金属撞击声</p>
               <div class="ask-row">
-                <input id="qa-input" value="合模异响先检查哪里" maxlength="200" />
+                <input id="qa-input" placeholder="针对这台设备提问，例如：合模异响先检查哪里" maxlength="200" />
                 <button id="qa-btn">提问</button>
               </div>
               <div class="chips" id="qa-suggest">
@@ -235,16 +235,7 @@
                 <button>铜套间隙标准是多少</button>
                 <button>怎么预防再次发生</button>
               </div>
-              <div class="answer" id="qa-answer">
-                <p class="q">问：合模异响先检查哪里</p>
-                <p class="a">安全提示：进入设备运动区域前先执行上锁挂牌（断电、泄压、上锁、挂牌、验证零能量），不要只按急停。</p>
-                <p class="a">1. 先查哥林柱润滑：清洁表面后补注专用润滑脂。<br />2. 再测铜套间隙：塞尺测量，超厂家上限即更换铜套，不能只补脂不测间隙。<br />3. 低速空载合模 20 次，复测振动与异响。<br />4. 若仍异响，检查模板平行度与拉杆螺母松动。</p>
-                <div class="sources">
-                  <span class="src">1 注塑机合模异响与哥林柱铜套润滑检查</span>
-                  <span class="src">2 维修前上锁挂牌（LOTO）安全要求</span>
-                </div>
-                <p class="meta">deepseek-chat · 耗时 6.4s · 回答由模型基于知识库生成，请结合现场判断</p>
-              </div>
+              <div class="answer" id="qa-answer"></div>
             </div>
           </section>
         </div>
@@ -321,7 +312,7 @@
       <div class="grid-kb">
         <section class="card ai">
           <div class="ai-head">
-            <span class="spark">✦</span>
+            <span class="spark">AI</span>
             <div>
               <h2>AI 知识问答</h2>
               <p>deepseek-chat · 先检索已发布知识，再依据原文作答并附来源</p>
@@ -337,13 +328,7 @@
               <button>点检发现轴承温度偏高怎么办</button>
               <button>哪些备件有可替代型号</button>
             </div>
-            <div class="answer" id="kb-answer">
-              <p class="q">问：合模时异响先检查哪里</p>
-              <p class="a">安全提示：进入设备运动区域前先执行上锁挂牌，不要只按急停不隔离能源。</p>
-              <p class="a">1. 先查哥林柱润滑，清洁后补注专用润滑脂。<br />2. 用塞尺测铜套间隙，超过厂家上限即更换。<br />3. 低速空载合模 20 次，复测振动与异响。</p>
-              <div class="sources"><span class="src">1 注塑机合模异响与哥林柱铜套润滑检查</span><span class="src">2 维修前上锁挂牌（LOTO）安全要求</span></div>
-              <p class="meta">deepseek-chat · 耗时 5.9s · 回答由模型基于知识库生成，请结合现场判断</p>
-            </div>
+            <div class="answer" id="kb-answer"></div>
           </div>
         </section>
 

@@ -20,7 +20,7 @@ const eyebrowEl = document.getElementById("page-eyebrow");
 const esc = (value) =>
   String(value ?? "").replace(/[&<>"']/g, (ch) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[ch]));
 
-function showView(key) {
+function showView(key, options = {}) {
   document.querySelectorAll(".view").forEach((view) => {
     view.classList.toggle("active", view.id === `view-${key}`);
   });
@@ -32,8 +32,12 @@ function showView(key) {
     titleEl.textContent = meta.title;
     eyebrowEl.textContent = meta.eyebrow;
   }
-  window.scrollTo({ top: 0, behavior: "smooth" });
+  if (!options.silent) history.replaceState(null, "", `#${key}`);
+  window.scrollTo({ top: 0 });
 }
+
+const initialView = location.hash.replace("#", "");
+if (initialView && VIEW_META[initialView]) showView(initialView, { silent: true });
 
 document.getElementById("nav").addEventListener("click", (event) => {
   const item = event.target.closest(".nav-item");
@@ -160,7 +164,7 @@ function renderDashboard() {
           ? '<span class="badge danger">已逾期</span>'
           : isToday
             ? '<span class="badge honey">今日</span>'
-            : `<span class="badge neutral">${fmt(plan.nextDueAt, "md")}</span>`;
+            : '<span class="badge neutral">待执行</span>';
         return `<li><span class="mono">${esc(plan.assetName)}</span><p>${esc(plan.name)}</p>${badge}<em>${fmt(plan.nextDueAt, "md")}</em></li>`;
       })
       .join(""),
@@ -981,7 +985,7 @@ function renderAdmin() {
   setText("#role-label", `ROLES ${S.roles.length}`);
   setText("#user-label", `USERS ${S.users.length}`);
 
-  const abilityLabels = { manage: "manage", repair: "repair", admin: "admin" };
+  const abilityLabels = { manage: "台账管理", repair: "维修作业", admin: "系统配置" };
   setHtml(
     "#role-grid",
     S.roles
