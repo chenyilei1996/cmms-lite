@@ -1,36 +1,203 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 设备管理平台（轻量版）
 
-## Getting Started
+月立集团设备管理平台：设备台账、扫码点检/报修、维修工单与过程留痕、巡检保养。
+一套响应式界面同时覆盖桌面与手机，支持 PWA 添加到主屏。
 
-First, run the development server:
+## 技术栈
+
+- Next.js 16（App Router）+ TypeScript
+- Tailwind CSS 4
+- PostgreSQL 16 + Drizzle ORM
+- 部署：app + db 两个容器
+
+## 本地启动
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
+# 1. 启动数据库（在项目根目录）
+docker compose -f infra/docker-compose.lite.yml up -d db
+
+# 2. 安装依赖并初始化
+cd app
+pnpm install
+pnpm db:push
+pnpm db:seed
+
+# 3. 启动
 pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+打开 http://localhost:3000
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 演示账号（统一密码 admin123）
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| 邮箱 | 角色 |
+| --- | --- |
+| admin@cmms.local | 系统管理员 |
+| manager@cmms.local | 维修主管 |
+| tech1@cmms.local | 维修工程师 |
+| tech2@cmms.local | 维修工程师 |
 
-## Learn More
+更多账号可在 `/admin/settings/users` 由系统管理员创建。
 
-To learn more about Next.js, take a look at the following resources:
+## 功能（P0 现场闭环）
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- 设备树：工厂 → 车间 → 产线 → 单机 → 部件五级结构，支持节点移动与审计（`/admin/assets/tree`）
+- 一机一档：概览、技术参数、文档（PDF/Office/图片）、部件、工单、点检、状态履历七个标签页
+- 设备状态：运行 / 待机 / 故障 / 维修 / 保养 / 停用 / 报废，变更原因与操作人全程留痕
+- 二维码：每台设备独立令牌，可按设备勾选并打印标签（`/admin/assets/qr`），扫码进入设备自助页（`/d/<token>`）
+- 扫码报修：`/r/<token>` 移动端表单，支持拍照（前端压缩、预览、删除，最多 3 张）、优先级；同设备已有未关闭工单或待受理报修时先提示，需人工确认后才允许继续提交；蜜罐 + IP/设备双维度限流防刷
+- 报修进度：`/t/<token>` 免登录查询，展示真实处理节点、预计完成与超期提示，仅公开状态不暴露内部备注和人员信息；同一手机自动记住最近报修，扫码设备页 `/d/<token>` 可直接回看
+- 扫码点检：`/d/<token>` 查看待点检任务，免登录填报、拍照并记录执行人；检查项异常自动生成高优先级维修工单
+- 点检路线：路线 + 点位 + 标准上下限，扫路线码 `/i/<token>` 按顺序填报；异常项自动转工单，路线页统计待执行与漏检
+- 工单引擎：故障报修 / 纠正性维修 / PM / 点检异常 / 改造项目五类；新建 / 已派工 / 处理中 / 待验收 / 已完成 / 已关闭
+- 工单详情：派工、转派（必填原因）、开工、故障代码与原因分析、工时/停机、备件领用扣库存与退料回库、照片、电子签名、验收、退回返修
+- 移动执行：`/m/work-orders/<id>` 扫码接单、完工填报、拍照上传、电子签名
+- 预防性维护：按时间周期或运行计数触发，到期自动建 PM 工单并去重；维护日历与运行计数录入
+- 巡检保养：模板新建/编辑、周期计划新建/编辑/停用启用、到期自动生成任务、异常转工单、近 30 天完成率
+- 通知与审计：派工/转派/PM 到期/点检异常写入站内通知；设备状态、派工、签名、文档等写入审计日志（`/admin/settings/audit`）
+- 总览：设备状态、工单进度、逾期保养、最近工单，低库存提醒直达备件台账
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 功能（P1 备件库存与领用）
 
-## Deploy on Vercel
+- 备件台账：编码、类别、规格、单位、品牌、供应商、默认仓库/库位、安全库存、参考单价（`/app/spare-parts`）
+- 扫码领用：备件二维码标签可批量打印（`/admin/spare-parts/qr`），手机扫码进入 `/m/spare-parts/<token>`，登录后输入数量、关联工单即可领用，自动扣库存、写流水并归集成本
+- 库存批次：按批次记录数量、成本、入库时间与效期，领用按先进先出扣减
+- 库存流水：入库 / 领用 / 退料 / 调拨 / 盘点调整全部留痕，可追溯到工单、设备与操作人（`/app/spare-parts/transactions`）
+- 工单联动：工单详情选择备件领用即扣库存、写流水、按参考单价归集成本；退料自动回库并冲减用料
+- 设备 BOM：备件关联到设备/部件，记录单台用量；设备档案展示 BOM 与备件消耗成本
+- 采购审批：技术员手动新建或低库存一键生成草稿，提交后由管理员/主管审批；驳回需填写原因，申请人可修改后重新提交，审批通过后才允许到货入库（自动增加批次与库存）
+- 库存盘点：按仓库快照生成盘点单，录入实盘数量后自动计算盘盈盘亏、调整库存并生成调整流水
+- 低库存提醒：总览与备件台账展示低于安全库存的备件
+- 种子数据：2 个仓库、8 种备件、10 个批次、7 条设备 BOM、4 张采购申请（待审批 2 / 已通过 / 已驳回）、1 张盘点单
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 功能（P2 故障与停机分析）
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- 故障代码库：代码、名称、类别、严重度与标准现象/原因/对策，支持启用停用（`/admin/faults/codes`）
+- 工单联动：工单详情可选择标准故障代码并自动带入现象/原因/对策，记录责任归属与影响产量
+- 停机记录：工单完成自动生成停机记录（PM/项目计为计划停机），也可在 `/app/faults` 手工补录；起止时间、责任归属、影响产量、关联工单与故障代码
+- 分析看板：30/90/365 天周期内故障次数、总停机时长、MTTR、MTBF、影响产量
+- 趋势与排名：近 14 天停机趋势、故障代码 TOP、设备停机 TOP、责任归属分布、计划/非计划停机结构
+- 统计口径：MTTR = 非计划停机总分钟 ÷ 非计划停机次数；MTBF =（周期可用分钟 − 非计划停机分钟）÷ 非计划故障次数，按在用单机/部件数折算
+- 种子数据：12 条标准故障代码、9 条停机记录（含工单自动记录）
+
+## 功能（P2 报表与 KPI）
+
+- 分析总览 `/admin/analytics`：工单及时率、PM 按期率、点检完成率、MTTR、MTBF、设备可用率、维修成本、库存金额，含近 6 个月工单/停机趋势
+- 工单分析 `/admin/analytics/work-orders`：及时率、平均响应/修复时长、积压、超期明细，按类型/优先级/负责人分布
+- 保养分析 `/admin/analytics/pm`：计划完成率、按期率、逾期任务、按计划的标准工时 vs 实际工时
+- 点检分析 `/admin/analytics/inspection`：路线完成率、漏检率、异常项 TOP、按路线统计
+- 备件分析 `/admin/analytics/spare-parts`：库存金额、领用金额、周转率、呆滞清单、低库存、领用 TOP
+- 成本分析 `/admin/analytics/cost`：人工 + 备件成本、月度结构、设备成本 TOP、成本不完整标记；仅管理员/主管可查看
+- 故障分析 `/admin/analytics/faults`：故障 Pareto、MTTR/MTBF 月度趋势、重复故障设备、责任归属；样本不足有标记
+- 统一筛选：周期 30/90/365 天，按设备、工单类型、优先级、负责人、备件类别、点检路线过滤
+- CSV 导出：`GET /api/export/<report>?days=...`，导出内容与当前筛选一致；记录操作人、时间、范围到审计日志
+- 口径：人工按 120 元/小时估算（`src/lib/reporting.ts` 可调）；周转率用领用金额 ÷ 当前库存金额近似；MTBF 以日历可用时间近似
+
+## 功能（P2 预测性维护）
+
+- 测点管理 `/admin/pdm/sensors`：为设备配置振动、温度、电流、油液等测点，记录编码、单位与安装位置，可停用/启用
+- 读数采集：页面手工录入，或网关调用 `POST /api/pdm/readings` 批量推送；请求头 `x-pdm-token` 对应环境变量 `PDM_INGEST_TOKEN`（本地默认 `dev-pdm-token`）
+- 规则类型：阈值（最新读数越限）、持续时长（窗口内读数全部越限且跨度达标）、趋势斜率（最近 24 小时线性回归按天折算）、组合条件（阈值 + 持续时长 / 斜率）
+- 报警分级：提示 / 预警 / 严重；同一规则同一测点已有未关闭报警（含已转建议）时只累加次数，不重复建报警
+- 处理闭环 `/app/pdm/alarms`：确认、忽略或生成建议工单；建议工单 `/app/pdm/suggestions` 由人工指定负责人、截止日期与优先级后转正式纠正性维修工单
+- 安全边界：报警与建议只写站内记录和通知，不自动停机、不自动派工；必须人工确认后才生成正式工单
+- 总览 `/app/pdm`：监测测点数、24h 读数、未关闭报警分级、待确认建议、近 24h 测点趋势
+- 口径：持续时长模式要求窗口内至少 2 条读数、全部越限且首末读数跨度 ≥ 设定时长的一半；斜率模式要求 24h 内至少 3 条读数且跨度 ≥ 3 小时
+- 种子数据：5 个测点（注塑机振动/油温、空压机排气温度/电流、冲床振动）、65 条近 24h 读数、4 条规则、2 条报警、2 条建议工单（1 条待确认、1 条已转工单）
+
+## 功能（设备知识库与维修经验）
+
+- 知识检索 `/app/kb`：按标题、摘要、正文、标签、编号搜索，可按分类、设备类别与状态筛选；展示浏览量与有用率
+- 知识分类：故障案例、维修方案、操作规程、安全提示、备件替代五类
+- 从工单沉淀：工单详情侧栏展示同设备/同故障代码的相关知识，一键进入新建页并预填现象、原因与处理结果（`/app/kb/new?workOrderId=...`）
+- 设备档案联动：一机一档「相关知识」按设备与设备类别聚合已发布知识，同类设备可复用
+- 知识详情 `/app/kb/<id>`：正文按段落、小标题与列表渲染；关联设备、故障代码、来源工单可跳转；同设备/同分类知识推荐
+- 评价闭环：登录用户可标记「有帮助 / 没帮助」，每人每篇可随时更改，自动汇总有用率
+- 权限：全员检索与评价；维修工程师可撰写、编辑草稿；维修主管与系统管理员负责发布与归档
+- 正文格式：空行分段、`##` 小标题、`-` 无序列表、`1.` 有序列表，纯文本渲染不解析 HTML
+- 种子数据：8 篇知识（6 篇已发布、2 篇草稿），覆盖五类分类，含来源工单、设备与故障代码关联
+
+## 功能（MES / ERP 集成中心）
+
+- 集成中心 `/admin/integrations`：端点、同步任务、近 7 天成功率、待拉取报文、待处理差异一屏总览；支持一键执行与启用停用
+- 集成端点 `/admin/integrations/endpoints`：维护 MES / ERP / WMS / IoT 对端地址、Bearer / Basic 认证、令牌（脱敏展示）与 Mock 开关；关闭 Mock 即切换真实接口
+- Mock 对端 `/admin/integrations/mock`：注入外部报修工单或设备主数据变更，快捷执行拉取任务；留存推送报文，支持展开查看 JSON
+- 运行记录 `/admin/integrations/runs`：按状态筛选批次，逐条展示创建、更新、幂等跳过、冲突、失败与尝试次数，原始批次可追溯
+- 同步对账 `/admin/integrations/reconcile`：按任务核对最近批次与对端报文，列出冲突 / 失败明细并跳转批次重试
+- 同步数据集：设备主数据、维修工单、备件领用、停机记录；推送支持全部四类，拉取支持设备主数据与维修工单并真实落库
+- 幂等与重试：幂等键为“方向 + 数据集 + 端点 + 业务单号（推送含数据版本）”，重复执行自动跳过；冲突 / 失败可新建重试批次，不覆盖原始结果
+- 拉取工单自动建单并通知主管；主数据回写会记录设备状态履历；审计日志记录端点、任务、Mock 注入与每次同步
+- 权限：全员可查看集成状态与对账；端点配置、任务维护、执行同步、Mock 注入仅管理员与主管
+- 种子数据：3 个 Mock 端点、5 个同步任务、3 条待拉取报文与 1 条演示推送批次
+
+## 功能（系统设置与用户权限）
+
+- 设置中心 `/admin/settings`：用户管理、角色权限、审计日志统一入口；个人资料独立在前台 `/app/profile`（桌面侧栏与移动顶栏头像处进入）
+- 用户管理 `/admin/settings/users`（仅系统管理员）：新增用户、修改姓名/角色、启用停用、重置密码；邮箱唯一，密码 bcrypt 哈希存储
+- 安全约束：不能停用或降级自己；至少保留一个启用的系统管理员；停用或改角色后下一次请求立即生效，无需等待 JWT 过期
+- 个人资料 `/app/profile`：修改显示名称、修改登录密码（校验当前密码与两次新密码）
+- 角色权限 `/admin/settings/roles`：四类角色 × 设备/工单/计划/库存/报表/系统管理的能力矩阵，与 `canManage`、`canRepair`、`isAdmin` 判定一致
+- 登录时间：成功登录自动记录 `last_login_at`，用户管理页可查看最近登录与账号创建时间
+- 审计：用户新增、资料修改、角色/状态变更、密码重置均写入审计日志
+
+## 前后台分域
+
+- 前台 `/app/...`：现场与管理者的日常工作台（总览、设备查看、工单、知识、保养执行、点检、备件领用与采购申请、故障分析、预测报警、通知、个人资料）。
+- 后台 `/admin/...`：配置与审批（设备建档 / 结构树 / 二维码、巡检模板与计划、备件建档 / 盘点、采购审批入口、故障代码、预测测点、报表、集成、用户与审计）。仅管理员与维修主管可进入，其他角色访问会自动回到 `/app/dashboard`。
+- 登录后默认进入 `/app/dashboard`；管理员与主管在前台侧栏底部看到「管理后台」入口，后台侧栏底部可「返回前台工作台」。
+- 旧地址（如 `/dashboard`、`/assets`、`/spare-parts/stocktake`）由 `next.config.ts` 307 到新路径；`/r /t /d /i /m` 公开与移动端地址保持不变，已印刷的二维码继续可用。
+
+## 目录
+
+```
+src/
+  app/
+    (portal)/
+      layout.tsx      前台 Shell（桌面侧栏 + 移动底栏）
+      app/            业务工作台：总览、设备、工单、知识、保养、点检、备件、分析、预测、通知、个人资料
+      m/              移动端工单执行与备件领用（URL 仍为 /m/...）
+    (admin)/
+      layout.tsx      后台 Shell（仅管理员 / 主管，其他角色跳回前台）
+      admin/          管理后台：设备建档、巡检配置、备件建档、采购审批入口、故障代码、预测配置、报表、集成、系统设置
+    (auth)/login/     登录
+    d/[token]/        设备自助页：待点检任务 + 报修入口（公开）
+    i/[token]/        点检路线扫码填报（公开）
+    r/[token]/        扫码报修（公开）
+    t/[token]/        报修进度（公开）
+    api/files/        附件读取（需登录）
+  components/         布局与 UI（app-shell / admin-shell / nav-links / admin-nav）
+  db/                 schema、连接、种子数据
+  lib/                鉴权、常量、二维码、工具
+  server/             Server Actions
+  proxy.ts            登录态与公开路由守卫
+  next.config.ts      旧地址 307 重定向到 /app 或 /admin
+```
+
+## 生产部署
+
+在项目根目录：
+
+```bash
+SESSION_SECRET='请替换为随机长字符串' \
+PUBLIC_BASE_URL='http://你的内网地址:3000' \
+docker compose -f infra/docker-compose.lite.yml up -d --build
+```
+
+如果 Docker Hub 不可达，可指定镜像加速地址：
+
+```bash
+NODE_IMAGE=docker.1ms.run/library/node:22-alpine \
+docker compose -f infra/docker-compose.lite.yml build
+```
+
+- 首次部署后执行一次 `pnpm db:push && pnpm db:seed`（或用镜像内脚本）初始化数据。
+- 生产环境务必修改演示账号密码与 `SESSION_SECRET`。
+- 二维码中的地址来自 `PUBLIC_BASE_URL`，部署后改成手机能访问的内网地址再打印标签。
+- 上传照片保存在 `cmms-lite-uploads` 卷，备份时与数据库一起备份。
+
+### 报修限流与反向代理
+
+- 默认规则：同一 IP 10 分钟 5 次，同一设备 1 小时 20 次，另有隐藏蜜罐字段。
+- 扫码点检：同一 IP 10 分钟 30 次，且只允许提交 `pending` 任务，重复提交会被拒绝。
+- 前面有 Nginx、Traefik、云负载均衡等反向代理时，**必须透传 `X-Forwarded-For`**（或 `X-Real-IP`），否则服务端拿不到真实 IP，IP 维度限流会自动跳过，只保留设备维度。
+- 直连 3000 端口时没有代理头，属于正常情况，不影响报修；如需按 IP 限流请加一层反向代理。
