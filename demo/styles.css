@@ -378,6 +378,43 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; background: 
 .notice-list p b { font-size: 12px; }
 .notice-list .time { margin-top: 1px; }
 
+/* 后台管理 */
+.admin-panel { display: none; }
+.admin-panel.active { display: block; animation: rise .28s ease both; }
+.role-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; padding: 16px 20px; }
+.role-card { border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; background: rgba(245,244,240,.5); }
+.role-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.role-top b { font-size: 12.5px; font-weight: 600; }
+.role-card .hint { margin-top: 6px; min-height: 32px; }
+.role-card .chips { margin-top: 8px; }
+.tree-list { margin-top: 10px; }
+.tree-list li { position: relative; padding: 10px 0; border-bottom: 1px dashed var(--line); font-size: 12px; }
+.tree-list li:last-child { border-bottom: 0; }
+.tree-list li b { font-weight: 500; }
+.tree-list li em { position: absolute; right: 0; top: 10px; font-style: normal; font-family: var(--font-mono); font-size: 10px; color: var(--muted); }
+.tree-list li span { display: block; margin-top: 3px; font-size: 10px; color: var(--muted); }
+.ai-config { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 14px; }
+.ai-config .k,
+.stat-row .k { font-size: 10px; color: var(--muted); }
+.ai-config .v { margin-top: 3px; font-size: 12px; word-break: break-all; }
+.ai-test { display: flex; align-items: center; gap: 10px; margin-top: 16px; }
+.ai-test button { height: 32px; padding: 0 14px; border-radius: 999px; background: var(--ink); color: #fff; font-size: 11px; }
+.ai-test button:disabled { opacity: .55; }
+.stat-row { display: flex; gap: 28px; margin-top: 14px; }
+.stat-row .v { margin-top: 3px; font-family: var(--font-mono); font-size: 19px; }
+.data-table a { color: var(--accent-ink); text-decoration: none; }
+.data-table a:hover { text-decoration: underline; }
+.stat-value small { font-size: 12px; }
+
+@media (max-width: 1080px) {
+  .role-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 860px) {
+  .role-grid { grid-template-columns: 1fr; }
+  .ai-config { grid-template-columns: 1fr; }
+  .stat-row { flex-wrap: wrap; gap: 16px; }
+}
+
 @media (max-width: 1080px) {
   .grid-assets { grid-template-columns: 1fr; }
   .grid-wo { grid-template-columns: 1fr; }
