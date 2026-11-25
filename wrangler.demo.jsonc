@@ -1,0 +1,10 @@
+{
+  // Cloudflare 静态演示站：只发布 app/demo 下的静态资源，不部署 Next.js 后端
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "cmms-lite-demo",
+  "compatibility_date": "2026-11-25",
+  "assets": {
+    "directory": "./demo",
+    "not_found_handling": "single-page-application"
+  }
+}
